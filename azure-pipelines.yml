@@ -1,26 +1,45 @@
-name: 'Frontend React Build Artifact'
-
 trigger:
-  branches:
-    include:
-      - main
+
+- main  # Substitua pelo nome da sua branch
+
+
 
 pool:
-  vmImage: ubuntu-latest
 
-variables:
-  buildConfiguration: 'Release'
+  vmImage: 'ubuntu-latest'  # Escolha a imagem de máquina adequada
 
-jobs:
-  - job: BuildAndTest
-      
-    steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: '20.x'
-      - task: CmdLine@2
-        inputs:
-          script: 'npm install'
-      - task: CmdLine@2
-        inputs:
-          script: 'npm run build'
+
+
+steps:
+
+- task: NodeTool@0
+
+  inputs:
+
+   versionSpec: '20.x'  # Certifique-se de que a versão do NodeJS é compatível
+
+
+
+- script: |
+
+   npm install -g firebase-tools
+
+  displayName: 'Instalar Firebase CLI'
+
+
+
+- script: |
+
+   npm install
+
+  displayName: 'Instalar dependências'
+
+
+
+- script: |
+
+   firebase deploy --token $(FIREBASE_TOKEN)
+
+   echo "Token: $(FIREBASE_TOKEN)"
+
+  displayName: 'Inclusao do Token do Firebase'
